@@ -69,7 +69,16 @@ The project uses the following dependencies:
 - `jsonwebtoken`: Authentication with JWT.
 - `mongodb`: MongoDB client for Node.js.
 
+## Live Link
+https://daily-to-do-server.vercel.app/
+
 You can install all dependencies using:
 
 ```bash
 npm install
+
+git clone https://github.com/Yead191/to-do-app-server
+cd to-do-app-server
+
+
+
