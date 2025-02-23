@@ -89,14 +89,14 @@ async function run() {
         })
         app.get('/tasks', async (req, res) => {
             const email = req.query.email
-            const result = await taskCollection.find({email}).toArray()
+            const result = await taskCollection.find({ email }).toArray()
             res.send(result)
         })
         app.put('/tasks/:id', async (req, res) => {
             const { id } = req.params;
             const { category } = req.body;
 
-            
+
 
             const task = await taskCollection.findOne({ _id: new ObjectId(id) });
 
@@ -132,17 +132,17 @@ async function run() {
 
 
         app.get('/my-tasks/today/:email', async (req, res) => {
-            const email = req.params.email; 
+            const email = req.params.email;
             const today = new Date();
-            today.setHours(0, 0, 0, 0);             
+            today.setHours(0, 0, 0, 0);
             const tasks = await taskCollection.find({ email }).toArray();
             const todayTasks = tasks.filter(task => {
                 const taskDate = new Date(task.date);
-                taskDate.setHours(0, 0, 0, 0); 
+                taskDate.setHours(0, 0, 0, 0);
                 return taskDate.getTime() === today.getTime();
             });
 
-            
+
             res.send(todayTasks);
         })
 
@@ -154,23 +154,33 @@ async function run() {
 
             const tasks = await taskCollection.find({ email }).toArray();
 
-            
+
             const upcomingTasks = tasks.filter(task => {
                 const taskDate = new Date(task.date);
-                taskDate.setHours(0, 0, 0, 0); 
+                taskDate.setHours(0, 0, 0, 0);
                 return taskDate.getTime() > today.getTime();
             });
 
-            
+
             res.send(upcomingTasks);
         })
 
+        app.patch('/my-task/update/:id', async (req, res) => {
+            const id = req.params.id
+            const updatedTask = req.body
+            const filter = { _id: new ObjectId(id) }
+            const updatedDoc = {
+                $set: {
+                    title: updatedTask.title,
+                    description: updatedTask.description,
+                    date: updatedTask.date,
+                    category: updatedTask.category
+                }
+            }
+            const result = await taskCollection.updateOne(filter, updatedDoc)
+            res.send(result)
 
-
-
-
-
-
+        })
 
 
         // Send a ping to confirm a successful connection
